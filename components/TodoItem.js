@@ -4,26 +4,37 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable'
 import CheckboxUnchecked from '../assets/checkbox-unchecked.svg'
 import CheckboxChecked from '../assets/checkbox-checked.svg'
 import DeleteIcon from '../assets/delete.svg'
+import { useDispatch } from 'react-redux'
+import { deleteTodo, updateTodo } from '../redux/slices/todoSlice'
 
 
-const TodoItem = () => {
+const TodoItem = (props) => {
+    const dispatch = useDispatch();
   return (
     <View style={styles.itemContainer}>
       <Pressable
       hitSlop={10}
       style={styles.itemCheckbox}
+      onPress = {()=>dispatch(updateTodo(props.id))}
       >
-          <CheckboxUnchecked/>
-          <CheckboxChecked style={styles.itemCheckboxCheckedIcon}/>
+          {props.state ==='todo' ? 
+         <CheckboxUnchecked/> : 
+         <CheckboxChecked style={styles.itemCheckboxCheckedIcon}/>
+        
+        }
+
       </Pressable>
       <Text style={[
           styles.itemText, 
-          styles.itemTextChecked]}>코딩하기</Text>
+          props.state === 'done'?styles.itemTextChecked : '']}>{props.text}</Text>
       <Pressable 
       style={[
         styles.deleteButton, 
-        styles.deleteButtonDone]}
-        hitSlop={10}>
+        props.state === 'done' ? styles.deleteButtonDone : '']}
+        hitSlop={10}
+        onPress={()=>dispatch(deleteTodo(props.id))}
+        >
+        
     <DeleteIcon/>
       </Pressable>
     </View>
